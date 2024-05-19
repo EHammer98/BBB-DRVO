@@ -6821,10 +6821,11 @@
 		sgx = "/ocp/sgx@56000000";
 		vmmcsd_fixed = "/fixedregulator0";
 	};
-    my_external_led {
-        compatible = "gpio-extern";
-        label = "my_external_led";
-        gpios = <&gpio0 17 0x00>;
-    }
+my_external_led {
+    compatible = "gpio-leds";
+    label = "my_external_led";
+    gpios = <&gpio0 17 0x00>;
+};
+
 };
 
