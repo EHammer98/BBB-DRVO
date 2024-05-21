@@ -61,14 +61,14 @@ static int gpio_ex_probe(struct platform_device *pdev) {
     // Request the GPIO
     ret = gpio_request(gpio_pin, "gpio_led");
     if (ret) {
-        printk(KERN_ERR "Failed to request GPIO %d\n", gpio_pin);
+        printk(KERN_ERR "Failed to request GPIO %d: %d\n", gpio_pin, ret);
         return ret;
     }
 
     // Set GPIO direction to output and initialize to low (LED off)
     ret = gpio_direction_output(gpio_pin, 0);
     if (ret) {
-        printk(KERN_ERR "Failed to set GPIO %d as output\n", gpio_pin);
+        printk(KERN_ERR "Failed to set GPIO %d as output: %d\n", gpio_pin, ret);
         gpio_free(gpio_pin);
         return ret;
     }
@@ -76,7 +76,7 @@ static int gpio_ex_probe(struct platform_device *pdev) {
     // Create sysfs entry
     ret = sysfs_create_file(&pdev->dev.kobj, &led_attribute.attr);
     if (ret) {
-        printk(KERN_ERR "Failed to create sysfs entry for LED\n");
+        printk(KERN_ERR "Failed to create sysfs entry for LED: %d\n", ret);
         gpio_free(gpio_pin);
         return ret;
     }
@@ -85,8 +85,11 @@ static int gpio_ex_probe(struct platform_device *pdev) {
     led_on(gpio_pin);
 
     printk(KERN_INFO "gpio_ex_probe: LED initialized and turned on on GPIO %d\n", gpio_pin);
+    printk(KERN_INFO "gpio_ex_probe: Completed successfully\n");
+
     return 0;
 }
+
 
 // Remove function called when the device is removed
 static int gpio_ex_remove(struct platform_device *pdev) {
