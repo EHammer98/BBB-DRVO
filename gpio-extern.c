@@ -10,6 +10,9 @@
 // Declare the GPIO pin
 static int gpio_pin = 51;  // Adjust if your GPIO number is different
 
+// Function prototypes to ensure they are known before first use
+static void led_on(int gpio_pin);
+static void led_off(int gpio_pin);
 
 // Function to read the LED state
 static ssize_t led_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf) {
@@ -122,7 +125,6 @@ static int __init gpio_ex_init(void) {
     printk(KERN_INFO "gpio_ex_init() called, test device created\n");
     return 0;
 }
-
 
 // Exit the driver
 static void __exit gpio_ex_exit(void) {
