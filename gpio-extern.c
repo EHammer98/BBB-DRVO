@@ -28,6 +28,7 @@ static const struct of_device_id g_ids[] = {
 
 // Probe function called when the device is detected
 static int gpio_ex_probe(struct platform_device *pdev) {
+	printk(KERN_INFO "gpio_ex_probe: Device found\n");
     int ret;
 
     // Request the GPIO
