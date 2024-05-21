@@ -3,10 +3,33 @@
 #include <linux/mod_devicetable.h>
 #include <linux/of.h>
 #include <linux/ioport.h>
-#include <linux/gpio.h>  // Include GPIO library for GPIO functions
+#include <linux/kobject.h>
+#include <linux/sysfs.h>
+#include <linux/gpio.h>
 
 // Declare the GPIO pin
 static int gpio_pin = 51;  // Adjust if your GPIO number is different
+
+
+// Function to read the LED state
+static ssize_t led_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf) {
+    return sprintf(buf, "%d\n", gpio_get_value(gpio_pin));
+}
+
+// Function to write the LED state
+static ssize_t led_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count) {
+    int value;
+    sscanf(buf, "%d", &value);
+    if (value == 0) {
+        led_off(gpio_pin);
+    } else {
+        led_on(gpio_pin);
+    }
+    return count;
+}
+
+// Define the sysfs attribute
+static struct kobj_attribute led_attribute = __ATTR(led, 0664, led_show, led_store);
 
 // Function to turn the LED on
 static void led_on(int gpio_pin) {
@@ -28,8 +51,9 @@ static const struct of_device_id g_ids[] = {
 
 // Probe function called when the device is detected
 static int gpio_ex_probe(struct platform_device *pdev) {
-	printk(KERN_INFO "gpio_ex_probe: Device probe started\n");
     int ret;
+
+    printk(KERN_INFO "gpio_ex_probe: Device probe started\n");
 
     // Request the GPIO
     ret = gpio_request(gpio_pin, "gpio_led");
@@ -42,11 +66,19 @@ static int gpio_ex_probe(struct platform_device *pdev) {
     ret = gpio_direction_output(gpio_pin, 0);
     if (ret) {
         printk(KERN_ERR "Failed to set GPIO %d as output\n", gpio_pin);
-        gpio_free(gpio_pin);  // Free GPIO if setting direction fails
+        gpio_free(gpio_pin);
         return ret;
     }
 
-    // Turn the LED on after initialization
+    // Create sysfs entry
+    ret = sysfs_create_file(&pdev->dev.kobj, &led_attribute.attr);
+    if (ret) {
+        printk(KERN_ERR "Failed to create sysfs entry for LED\n");
+        gpio_free(gpio_pin);
+        return ret;
+    }
+
+    // Turn the LED on after initialization for confirmation
     led_on(gpio_pin);
 
     printk(KERN_INFO "gpio_ex_probe: LED initialized and turned on on GPIO %d\n", gpio_pin);
@@ -57,6 +89,9 @@ static int gpio_ex_probe(struct platform_device *pdev) {
 static int gpio_ex_remove(struct platform_device *pdev) {
     // Turn the LED off before removing the driver
     led_off(gpio_pin);
+
+    // Remove sysfs entry
+    sysfs_remove_file(&pdev->dev.kobj, &led_attribute.attr);
 
     // Free the GPIO pin
     gpio_free(gpio_pin);
