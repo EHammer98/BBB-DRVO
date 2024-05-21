@@ -28,7 +28,7 @@ static const struct of_device_id g_ids[] = {
 
 // Probe function called when the device is detected
 static int gpio_ex_probe(struct platform_device *pdev) {
-	printk(KERN_INFO "gpio_ex_probe: Device found\n");
+	printk(KERN_INFO "gpio_ex_probe: Device probe started\n")
     int ret;
 
     // Request the GPIO
@@ -78,11 +78,16 @@ struct platform_driver g_driver = {
 
 // Initialize the driver
 static int __init gpio_ex_init(void) {
-    int result;
-    result = platform_driver_register(&g_driver); 
-    printk(KERN_INFO "gpio_ex_init() called\n");
-    return result;
+    struct platform_device *pdev;
+    pdev = platform_device_register_simple("gpio-extern", -1, NULL, 0);
+    if (IS_ERR(pdev)) {
+        printk(KERN_ERR "gpio_ex_init: Failed to create test device\n");
+        return PTR_ERR(pdev);
+    }
+    printk(KERN_INFO "gpio_ex_init() called, test device created\n");
+    return 0;
 }
+
 
 // Exit the driver
 static void __exit gpio_ex_exit(void) {
