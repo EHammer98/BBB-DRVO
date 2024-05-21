@@ -3512,7 +3512,7 @@
 			phandle = < 0x2a >;
 		};
 
-		gpio0: gpio@44e07000 {
+		gpio@44e07000 {
 			compatible = "ti,omap4-gpio";
 			ti,hwmods = "gpio1";
 			gpio-controller;
@@ -3525,7 +3525,7 @@
 			phandle = < 0x2f >;
 		};
 
-		gpio@4804c000 {
+		gpio1: gpio@4804c000 {
 			compatible = "ti,omap4-gpio";
 			ti,hwmods = "gpio2";
 			gpio-controller;
@@ -6104,10 +6104,10 @@
 			linux,default-trigger = "mmc1";
 			default-state = "off";
 		};
-		my_external_led {
-    compatible = "gpio-leds";
-    label = "my_external_led";
-    gpios = <&gpio0 17 0x01>;
+led_extern {
+    compatible="gpio-extern";
+    label = "mijn groene ledje";
+    gpios = <&gpio1 19 0x01>;
 };
 	};
 
