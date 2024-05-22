@@ -6,6 +6,7 @@
 #include <linux/kobject.h>
 #include <linux/sysfs.h>
 #include <linux/gpio.h>
+#include <linux/of_gpio.h>  // Make sure this is included
 
 // Declare the GPIO pin
 static int gpio_pin = 51;  // Adjust if your GPIO number is different
@@ -52,8 +53,7 @@ static const struct of_device_id g_ids[] = {
     { } // Ends with an empty entry; MUST be the last member
 };
 
-// Probe function called when the device is detected#include <linux/of_gpio.h>  // Include for of_get_named_gpio and other DT functions
-
+// Probe function called when the device is detected
 static int gpio_ex_probe(struct platform_device *pdev) {
     int ret;
     struct device_node *np = pdev->dev.of_node;  // Device node from the device tree
@@ -99,9 +99,6 @@ static int gpio_ex_probe(struct platform_device *pdev) {
 
     return 0;
 }
-
-
-
 
 // Remove function called when the device is removed
 static int gpio_ex_remove(struct platform_device *pdev) {
@@ -152,7 +149,6 @@ static int __init gpio_ex_init(void) {
 
     return 0;
 }
-
 
 // Exit the driver
 static void __exit gpio_ex_exit(void) {
