@@ -121,14 +121,27 @@ struct platform_driver g_driver = {
 // Initialize the driver
 static int __init gpio_ex_init(void) {
     struct platform_device *pdev;
+    int ret;
+
     pdev = platform_device_register_simple("gpio-extern", -1, NULL, 0);
     if (IS_ERR(pdev)) {
         printk(KERN_ERR "gpio_ex_init: Failed to create test device\n");
         return PTR_ERR(pdev);
     }
     printk(KERN_INFO "gpio_ex_init() called, test device created\n");
+
+    // Register the driver
+    ret = platform_driver_register(&g_driver);
+    if (ret) {
+        printk(KERN_ERR "gpio_ex_init: Failed to register driver: %d\n", ret);
+        // Unregister the device if driver registration fails
+        platform_device_unregister(pdev);
+        return ret;
+    }
+
     return 0;
 }
+
 
 // Exit the driver
 static void __exit gpio_ex_exit(void) {
