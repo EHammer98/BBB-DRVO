@@ -153,5 +153,5 @@ module_init(gpio_ex_init);
 module_exit(gpio_ex_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Your Name");
+MODULE_AUTHOR("E. Hammer");
 MODULE_DESCRIPTION("A simple external LED driver for the BBB");
