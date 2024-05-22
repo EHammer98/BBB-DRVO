@@ -6106,7 +6106,7 @@
 		};
 led_extern {
     compatible="gpio-extern";
-    label = "mijn groene ledje";
+    label = "externe rode led";
     gpios = <&gpio1 19 0x01>;
 };
 	};

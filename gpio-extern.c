@@ -52,11 +52,21 @@ static const struct of_device_id g_ids[] = {
     { } // Ends with an empty entry; MUST be the last member
 };
 
-// Probe function called when the device is detected
+// Probe function called when the device is detected#include <linux/of_gpio.h>  // Include for of_get_named_gpio and other DT functions
+
 static int gpio_ex_probe(struct platform_device *pdev) {
     int ret;
+    struct device_node *np = pdev->dev.of_node;  // Device node from the device tree
 
     printk(KERN_INFO "gpio_ex_probe: Device probe started\n");
+
+    // Get and log the GPIO pin number from the device tree
+    gpio_pin = of_get_named_gpio(np, "gpios", 0);
+    if (gpio_pin < 0) {
+        printk(KERN_ERR "Failed to get GPIO pin from the device tree\n");
+        return gpio_pin;
+    }
+    printk(KERN_INFO "GPIO pin retrieved from device tree: %d\n", gpio_pin);
 
     // Request the GPIO
     ret = gpio_request(gpio_pin, "gpio_led");
@@ -89,6 +99,7 @@ static int gpio_ex_probe(struct platform_device *pdev) {
 
     return 0;
 }
+
 
 
 
