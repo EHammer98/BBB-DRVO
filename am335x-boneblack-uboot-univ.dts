@@ -6104,11 +6104,7 @@
 			linux,default-trigger = "mmc1";
 			default-state = "off";
 		};
-led_extern {
-    compatible="gpio-extern";
-    label = "externe rode led";
-    gpios = <&gpio1 19 0x01>;
-};
+
 	};
 
 	fixedregulator0 {
@@ -6825,6 +6821,11 @@ led_extern {
 		rng = "/ocp/rng@48310000";
 		sgx = "/ocp/sgx@56000000";
 		vmmcsd_fixed = "/fixedregulator0";
+	};
+	led_extern {
+		compatible="gpio-extern";
+		label = "externe rode led";
+		gpios = <&gpio1 19 0x01>;
 	};
 };
 
