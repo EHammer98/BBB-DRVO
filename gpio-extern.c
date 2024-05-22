@@ -63,7 +63,7 @@ static int gpio_ex_probe(struct platform_device *pdev) {
     // Get and log the GPIO pin number from the device tree
     gpio_pin = of_get_named_gpio(np, "gpios", 0);
     if (gpio_pin < 0) {
-        printk(KERN_ERR "Failed to get GPIO pin from the device tree\n");
+        printk(KERN_ERR "Failed to get GPIO pin from the device tree: %d\n", gpio_pin);
         return gpio_pin;
     }
     printk(KERN_INFO "GPIO pin retrieved from device tree: %d\n", gpio_pin);
@@ -99,6 +99,7 @@ static int gpio_ex_probe(struct platform_device *pdev) {
 
     return 0;
 }
+
 
 // Remove function called when the device is removed
 static int gpio_ex_remove(struct platform_device *pdev) {
