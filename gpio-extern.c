@@ -91,6 +91,7 @@ static int gpio_ex_probe(struct platform_device *pdev) {
 }
 
 
+
 // Remove function called when the device is removed
 static int gpio_ex_remove(struct platform_device *pdev) {
     // Turn the LED off before removing the driver
