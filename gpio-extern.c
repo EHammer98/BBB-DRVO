@@ -56,14 +56,14 @@ static const struct of_device_id g_ids[] = {
 // Probe function called when the device is detected
 static int gpio_ex_probe(struct platform_device *pdev) {
     int ret;
-    struct device_node *np = pdev->dev.of_node;  // Device node from the device tree
+    struct device_node *np = pdev->dev.of_node;
 
-    printk(KERN_INFO "gpio_ex_probe: Device probe started\n");
+    printk(KERN_INFO "gpio_ex_probe: Device probe started for %pOF\n", np);
 
-    // Get and log the GPIO pin number from the device tree
+    // Attempt to retrieve the GPIO pin
     gpio_pin = of_get_named_gpio(np, "gpios", 0);
     if (gpio_pin < 0) {
-        printk(KERN_ERR "Failed to get GPIO pin from the device tree: %d\n", gpio_pin);
+        printk(KERN_ERR "Failed to get GPIO pin from device tree: %d\n", gpio_pin);
         return gpio_pin;
     }
     printk(KERN_INFO "GPIO pin retrieved from device tree: %d\n", gpio_pin);
@@ -75,23 +75,13 @@ static int gpio_ex_probe(struct platform_device *pdev) {
         return ret;
     }
 
-    // Set GPIO direction to output and initialize to low (LED off)
+    // Set GPIO direction and turn the LED on for confirmation
     ret = gpio_direction_output(gpio_pin, 0);
     if (ret) {
         printk(KERN_ERR "Failed to set GPIO %d as output: %d\n", gpio_pin, ret);
         gpio_free(gpio_pin);
         return ret;
     }
-
-    // Create sysfs entry
-    ret = sysfs_create_file(&pdev->dev.kobj, &led_attribute.attr);
-    if (ret) {
-        printk(KERN_ERR "Failed to create sysfs entry for LED: %d\n", ret);
-        gpio_free(gpio_pin);
-        return ret;
-    }
-
-    // Turn the LED on after initialization for confirmation
     led_on(gpio_pin);
 
     printk(KERN_INFO "gpio_ex_probe: LED initialized and turned on on GPIO %d\n", gpio_pin);
@@ -99,6 +89,7 @@ static int gpio_ex_probe(struct platform_device *pdev) {
 
     return 0;
 }
+
 
 
 // Remove function called when the device is removed
