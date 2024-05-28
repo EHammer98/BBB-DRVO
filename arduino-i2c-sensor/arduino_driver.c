@@ -4,15 +4,23 @@
 static int arduino_probe(struct i2c_client *client, const struct i2c_device_id *id) {
     char buffer[2];
     int dist;
+    int ret;
 
-    // Example read
-    i2c_master_recv(client, buffer, 2);
+    printk(KERN_INFO "Arduino probe function called.\n");
+
+    ret = i2c_master_recv(client, buffer, 2);
+    if (ret < 0) {
+        printk(KERN_ERR "Failed to receive data from Arduino: %d\n", ret);
+        return ret;
+    }
+
     dist = (buffer[0] << 8) | buffer[1];
-
+    printk(KERN_INFO "Received bytes: %x %x\n", buffer[0], buffer[1]);
     printk(KERN_INFO "Distance: %d cm\n", dist);
 
     return 0;
 }
+
 
 static int arduino_remove(struct i2c_client *client) {
     return 0;

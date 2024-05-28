@@ -7,25 +7,21 @@ long duration, distance;
 void setup() {
   pinMode(triggerPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  Serial.begin(9600); // Start serial communication for debugging
   Wire.begin(8);  // Join I2C bus with address #8
   Wire.onRequest(requestEvent);  // Register event
 }
 
 void loop() {
-  // Clears the triggerPin
   digitalWrite(triggerPin, LOW);
   delayMicroseconds(2);
-
-  // Sets the triggerPin on HIGH state for 10 micro seconds
   digitalWrite(triggerPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(triggerPin, LOW);
-
-  // Reads the echoPin, returns the sound wave travel time in microseconds
   duration = pulseIn(echoPin, HIGH);
-
-  // Calculating the distance
-  distance = duration * 0.034 / 2;  // Speed of sound wave divided by 2 (go and back)
+  distance = duration * 0.034 / 2;
+  Serial.print("Distance: ");
+  Serial.println(distance);
   delay(100);
 }
 
