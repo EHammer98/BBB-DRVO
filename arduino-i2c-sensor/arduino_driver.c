@@ -1,6 +1,7 @@
 #include <linux/module.h>
 #include <linux/i2c.h>
 #include <linux/device.h>
+#include <linux/of.h>
 
 // Forward declaration of the show function for the sysfs entry
 static ssize_t distance_show(struct device *dev, struct device_attribute *attr, char *buf);
@@ -46,17 +47,24 @@ static const struct i2c_device_id arduino_id[] = {
     { "arduino", 0 },
     { }
 };
-MODULE_DEVICE_TABLE(i2c, arduino_id);
+
+static const struct of_device_id arduino_of_match[] = {
+    { .compatible = "generic,i2c-slave" },
+    {},
+};
+MODULE_DEVICE_TABLE(of, arduino_of_match);
 
 static struct i2c_driver arduino_driver = {
     .driver = {
         .name = "arduino",
         .owner = THIS_MODULE,
+        .of_match_table = of_match_ptr(arduino_of_match),
     },
     .probe = arduino_probe,
     .remove = arduino_remove,
     .id_table = arduino_id,
 };
+
 
 module_i2c_driver(arduino_driver);
 
