@@ -56,6 +56,7 @@ static const struct of_device_id g_ids[] = {
 // Probe function called when the device is detected
 static int gpio_ex_probe(struct platform_device *pdev) {
     int ret;
+	const char* label;
     struct device_node *np = pdev->dev.of_node;
 
     printk(KERN_INFO "gpio_ex_probe: Device probe started for %pOF\n", np);
@@ -92,7 +93,7 @@ static int gpio_ex_probe(struct platform_device *pdev) {
         return ret;
     }
 	
-		const char* label;
+		
 	if (!of_property_read_string(np, "label", &label)) {
 		printk(KERN_INFO "Label from DT: %s\n", label);
 	} else {
