@@ -91,6 +91,14 @@ static int gpio_ex_probe(struct platform_device *pdev) {
         gpio_free(gpio_pin);  // Cleanup GPIO before returning
         return ret;
     }
+	
+		const char* label;
+	if (!of_property_read_string(np, "label", &label)) {
+		printk(KERN_INFO "Label from DT: %s\n", label);
+	} else {
+		printk(KERN_INFO "Failed to read label from DT\n");
+	}
+
 
     printk(KERN_INFO "gpio_ex_probe: LED initialized and turned on on GPIO %d\n", gpio_pin);
     printk(KERN_INFO "gpio_ex_probe: Completed successfully\n");
