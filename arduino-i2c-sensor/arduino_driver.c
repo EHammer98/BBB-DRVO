@@ -2,25 +2,22 @@
 #include <linux/i2c.h>
 
 static int arduino_probe(struct i2c_client *client, const struct i2c_device_id *id) {
-    char buffer[2];
-    int dist;
-    int ret;
+    int err;
 
-    printk(KERN_INFO "Arduino probe function called.\n");
+    err = device_create_file(&client->dev, &dev_attr_distance);
+    if (err)
+        return err;
 
-    ret = i2c_master_recv(client, buffer, 2);
-    if (ret < 0) {
-        printk(KERN_ERR "Failed to receive data from Arduino: %d\n", ret);
-        return ret;
-    }
-
-    dist = (buffer[0] << 8) | buffer[1];
-    printk(KERN_INFO "Received bytes: %x %x\n", buffer[0], buffer[1]);
-    printk(KERN_INFO "Distance: %d cm\n", dist);
-
+    printk(KERN_INFO "Arduino I2C Driver Initialized.\n");
     return 0;
 }
 
+
+static int arduino_remove(struct i2c_client *client) {
+    device_remove_file(&client->dev, &dev_attr_distance);
+    printk(KERN_INFO "Arduino I2C Driver Removed.\n");
+    return 0;
+}
 
 static int arduino_remove(struct i2c_client *client) {
     return 0;
@@ -41,6 +38,21 @@ static struct i2c_driver arduino_driver = {
     .remove = arduino_remove,
     .id_table = arduino_id,
 };
+
+static ssize_t distance_show(struct device *dev, struct device_attribute *attr, char *buf) {
+    int dist;
+    char buffer[2];
+    struct i2c_client *client = to_i2c_client(dev);
+
+    if (i2c_master_recv(client, buffer, 2) < 0)
+        return -EIO;
+
+    dist = (buffer[0] << 8) | buffer[1];
+    return sprintf(buf, "%d\n", dist);
+}
+
+static DEVICE_ATTR(distance, S_IRUGO, distance_show, NULL);
+
 
 module_i2c_driver(arduino_driver);
 
