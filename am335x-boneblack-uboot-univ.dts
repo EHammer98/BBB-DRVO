@@ -3763,17 +3763,23 @@
 		};
 
 		i2c@4802a000 {
-			compatible = "ti,omap4-i2c";
-			#address-cells = < 0x01 >;
-			#size-cells = < 0x00 >;
-			ti,hwmods = "i2c2";
-			reg = < 0x4802a000 0x1000 >;
-			interrupts = < 0x47 >;
-			status = "okay";
-			pinctrl-names = "default";
-			pinctrl-0;
-			clock-frequency = < 0x186a0 >;
-			phandle = < 0x27e >;
+    compatible = "ti,omap4-i2c";
+    #address-cells = <0x01>;
+    #size-cells = <0x00>;
+    ti,hwmods = "i2c2";
+    reg = <0x4802a000 0x1000>;
+    interrupts = <0x47>;
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0;
+    clock-frequency = <0x186a0>;
+    phandle = <0x27e>;
+
+    arduino_i2c@8 {
+        compatible = "generic,i2c-slave";
+        reg = <0x08>;  // I2C address of Arduino
+        status = "okay";
+    };
 		};
 
 		i2c@4819c000 {
