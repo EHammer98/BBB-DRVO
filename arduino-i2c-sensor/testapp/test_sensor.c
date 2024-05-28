@@ -9,7 +9,7 @@ int main() {
     int fd;
     char buf[256];
 
-    fd = open("/sys/class/i2c-dev/i2c-1/device/1-0008/distance", O_RDONLY);
+    fd = open("/sys/class/i2c-dev/i2c-2/device/2-0008/distance", O_RDONLY);
     if (fd < 0) {
         perror("Failed to open the device");
         return errno;  // Now 'errno' is recognized
