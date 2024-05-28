@@ -9,16 +9,18 @@ static ssize_t distance_show(struct device *dev, struct device_attribute *attr, 
 static DEVICE_ATTR(distance, S_IRUGO, distance_show, NULL);
 
 static int arduino_probe(struct i2c_client *client, const struct i2c_device_id *id) {
-    int err;
-
-    // Create the sysfs file
-    err = device_create_file(&client->dev, &dev_attr_distance);
-    if (err)
+    printk(KERN_INFO "Arduino probe start.\n");
+    
+    int err = device_create_file(&client->dev, &dev_attr_distance);
+    if (err) {
+        printk(KERN_ERR "Failed to create sysfs entry: %d\n", err);
         return err;
+    }
 
     printk(KERN_INFO "Arduino I2C Driver Initialized.\n");
     return 0;
 }
+
 
 static int arduino_remove(struct i2c_client *client) {
     // Remove the sysfs file
