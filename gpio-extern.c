@@ -49,7 +49,7 @@ static void led_off(int gpio_pin) {
 
 // Array of compatible device IDs
 static const struct of_device_id g_ids[] = {
-    { .compatible = "led-extern", },
+    { .compatible = "gpio-extern", },
     { } // Ends with an empty entry; MUST be the last member
 };
 
