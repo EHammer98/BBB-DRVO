@@ -124,7 +124,7 @@ static int __init gpio_ex_init(void) {
 
     printk(KERN_INFO "gpio_ex_init() called\n");
 
-    // Register the driver only
+    // Register the driver
     ret = platform_driver_register(&g_driver);
     if (ret) {
         printk(KERN_ERR "gpio_ex_init: Failed to register driver: %d\n", ret);
