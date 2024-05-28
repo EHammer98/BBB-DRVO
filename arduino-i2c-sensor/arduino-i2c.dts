@@ -1,0 +1,20 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "ti,beaglebone", "ti,beaglebone-black";
+
+    fragment@0 {
+        target = <&i2c2>;  // Adjust based on which I2C bus you are using
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            arduino_i2c: arduino@8 {
+                compatible = "generic,i2c-slave";
+                reg = <8>;  // I2C address of Arduino
+                status = "okay";
+            };
+        };
+    };
+};
