@@ -38,7 +38,7 @@ int main() {
     printf("Distance: %s cm\n", buf);
 
     close(fd);
-		delay(1);
+		delay(2);
 }
     return 0;
 	
