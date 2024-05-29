@@ -3,7 +3,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
-#include <errno.h>  // Include this to use 'errno'
+#include <time.h>
+#include <errno.h> 
 
 int main() {
 	while(1){
@@ -24,6 +25,8 @@ int main() {
     printf("Distance: %s cm\n", buf);
 
     close(fd);
+		delay(0.250);
+}
     return 0;
-	}
+	
 }
