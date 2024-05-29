@@ -15,12 +15,14 @@ int main() {
         return errno;  // Now 'errno' is recognized
     }
 
+	while(1){
     if (read(fd, buf, sizeof(buf)) < 0) {
         perror("Failed to read from the device");
         close(fd);
         return errno;
     }
     printf("Distance: %s cm\n", buf);
+	}
 
     close(fd);
     return 0;
