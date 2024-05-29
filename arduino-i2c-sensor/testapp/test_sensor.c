@@ -6,6 +6,7 @@
 #include <errno.h>  // Include this to use 'errno'
 
 int main() {
+	while(1){
     int fd;
     char buf[256];
 
@@ -24,4 +25,5 @@ int main() {
 
     close(fd);
     return 0;
+	}
 }
